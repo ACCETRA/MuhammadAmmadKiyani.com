@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beast Den - Find Your Perfect Pet Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary-color: #ec4899;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --gradient-secondary: linear-gradient(135deg, #ec4899 0%, #f43f5e 100%);
+            --gradient-hero: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #ec4899 100%);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-light: #94a3b8;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8fafc;
+            --bg-tertiary: #e2e8f0;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.18);
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --radius-full: 9999px;
+            --transition-fast: 0.2s ease;
+            --transition-base: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            background: var(--bg-secondary);
+            overflow-x: hidden;
+        }
+
+        body.dark {
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-light: #94a3b8;
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Splash Screen with Enhanced Animation */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--gradient-hero);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 1.2s ease;
+            overflow: hidden;
+        }
+
+        #splash-screen::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .splash-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .splash-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .splash-logo svg {
+            width: 140px;
+            height: 140px;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 10px 30px rgba(0,0,0,0.3));
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .splash-logo h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .splash-logo p {
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .splash-loader {
+            margin-top: 3rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            animation: loading 2.5s ease-in-out;
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { 
+                transform: translateY(0) scale(1); 
+            }
+            50% { 
+                transform: translateY(-20px) scale(1.05); 
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 0;
+        }
+
+        body.dark header {
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: var(--transition-base);
+        }
+
+        .logo-area:hover {
+            transform: translateY(-3px);
+        }
+
+        .logo-svg {
+            width: 50px;
+            height: 50px;
+            fill: white;
+            background: var(--gradient-primary);
+            padding: 8px;
+            border-radius: 50%;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-text .logo-title {
+            font-size: 1.6rem;
+            font-weight: 900;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text .tagline {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.875rem 1rem 0.875rem 3rem;
+            border: 2px solid var(--bg-tertiary);
+            border-radius: var(--radius-full);
+            font-size: 0.95rem;
+            transition: var(--transition-base);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            color: var(--text-light);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle,
+        .cart-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: var(--transition-base);
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        .theme-toggle:hover,
+        .cart-btn:hover {
+            background: rgba(99, 102, 241, 0.1);
+            transform: scale(1.1);
+        }
+
+        .theme-toggle svg,
+        .cart-btn svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .sun { display: block; }
+        .moon { display: none; }
+        body.dark .sun { display: none; }
+        body.dark .moon { display: block; }
+
+        .cart-count {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--gradient-secondary);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-base);
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 5rem 0;
+            background: var(--gradient-hero);
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.5;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-white {
+            background: white;
+            color: var(--primary-color);
+            padding: 1rem 2rem;
+        }
+
+        .btn-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+
+        /* Section Styles */
+        section {
+            padding: 5rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Features Grid */
+        .features {
+            background: var(--bg-primary);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border-radius: var(--radius-lg);
+            background: var(--bg-secondary);
+            border: 2px solid transparent;
+            transition: var(--transition-base);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1.5rem;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .feature-icon svg {
+            width: 36px;
+            height: 36px;
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Pets Section */
+        .pets-section {
+            background: var(--bg-secondary);
+        }
+
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 0.75rem 1.5rem;
+            border: 2px solid var(--bg-tertiary);
+            background: var(--bg-primary);
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            transition: var(--transition-base);
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+        }
+
+        .pets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .pet-card {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: var(--transition-base);
+        }
+
+        .pet-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .pet-image {
+            width: 100%;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .pet-image svg {
+            width: 120px;
+            height: 120px;
+            color: white;
+            opacity: 0.3;
+        }
+
+        .pet-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--gradient-secondary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .pet-info {
+            padding: 1.5rem;
+        }
+
+        .pet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .pet-info h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .pet-breed {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .pet-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pet-details {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .pet-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .pet-detail svg {
+            width: 18px;
+            height: 18px;
+            color: var(--primary-color);
+        }
+
+        .pet-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .pet-actions .btn {
+            flex: 1;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-primary);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+
+        body.dark footer {
+            background: #0a0f1a;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: var(--transition-fast);
+        }
+
+        .footer-section a:hover {
+            color: white;
+            padding-left: 0.5rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-wrap: wrap;
+            }
+            .search-bar {
+                order: 3;
+                width: 100%;
+                max-width: 100%;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            .pets-grid,
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-particles"></div>
+        <div class="splash-logo">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C10.35 2 9 3.35 9 5c0 1.39.95 2.55 2.23 2.89C11.08 8.48 11 9.23 11 10c0 2.76 2.24 5 5 5 .77 0 1.52-.18 2.19-.51.28.63.81 1.12 1.47 1.34.28.09.57.17.87.17 1.1 0 2-.9 2-2 0-.3-.08-.59-.17-.87-.22-.66-.71-1.19-1.34-1.47.33-.67.51-1.42.51-2.19 0-2.76-2.24-5-5-5-.77 0-1.52.08-2.11.23C14.55 3.95 13.39 3 12 3c-1.65 0-3 1.35-3 3s1.35 3 3 3c.77 0 1.47-.29 2-.77.53.48 1.23.77 2 .77.77 0 1.47-.29 2-.77.53.48 1.23.77 2 .77 1.65 0 3-1.35 3-3s-1.35-3-3-3c-.77 0-1.47.29-2 .77C14.47 3.29 13.77 3 13 3c-.77 0-1.47.29-2 .77C10.47 3.29 9.77 3 9 3c-1.1 0-2 .9-2 2s.9 2 2 2zM7 11c-1.65 0-3 1.35-3 3s1.35 3 3 3c.77 0 1.47-.29 2-.77.53.48 1.23.77 2 .77s1.47-.29 2-.77c.53.48 1.23.77 2 .77 1.65 0 3-1.35 3-3s-1.35-3-3-3c-.77 0-1.47.29-2 .77-.53-.48-1.23-.77-2-.77s-1.47.29-2 .77C8.47 11.29 7.77 11 7 11zm5 7c-1.65 0-3 1.35-3 3v1c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1c0-1.65-1.35-3-3-3z"/>
+            </svg>
+            <h1>Beast Den</h1>
+            <p>Your Pet Paradise</p>
+        </div>
+        <div class="splash-loader">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo-area">
+                    <svg class="logo-svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2C10.35 2 9 3.35 9 5c0 1.39.95 2.55 2.23 2.89C11.08 8.48 11 9.23 11 10c0 2.76 2.24 5 5 5 .77 0 1.52-.18 2.19-.51.28.63.81 1.12 1.47 1.34.28.09.57.17.87.17 1.1 0 2-.9 2-2 0-.3-.08-.59-.17-.87-.22-.66-.71-1.19-1.34-1.47.33-.67.51-1.42.51-2.19 0-2.76-2.24-5-5-5-.77 0-1.52.08-2.11.23C14.55 3.95 13.39 3 12 3c-1.65 0-3 1.35-3 3s1.35 3 3 3c.77 0 1.47-.29 2-.77.53.48 1.23.77 2 .77.77 0 1.47-.29 2-.77.53.48 1.23.77 2 .77 1.65 0 3-1.35 3-3s-1.35-3-3-3c-.77 0-1.47.29-2 .77C14.47 3.29 13.77 3 13 3c-.77 0-1.47.29-2 .77C10.47 3.29 9.77 3 9 3c-1.1 0-2 .9-2 2s.9 2 2 2zM7 11c-1.65 0-3 1.35-3 3s1.35 3 3 3c.77 0 1.47-.29 2-.77.53.48 1.23.77 2 .77s1.47-.29 2-.77c.53.48 1.23.77 2 .77 1.65 0 3-1.35 3-3s-1.35-3-3-3c-.77 0-1.47.29-2 .77-.53-.48-1.23-.77-2-.77s-1.47.29-2 .77C8.47 11.29 7.77 11 7 11zm5 7c-1.65 0-3 1.35-3 3v1c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1c0-1.65-1.35-3-3-3z"/>
+                    </svg>
+                    <div class="logo-text">
+                        <h1 class="logo-title">Beast Den</h1>
+                        <p class="tagline">Your Pet Paradise</p>
+                    </div>
+                </div>
+
+                <div class="search-bar">
+                    <svg class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <input type="search" placeholder="Search for pets, breeds, or accessories..." aria-label="Search">
+                </div>
+
+                <div class="nav-actions">
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                        <svg class="sun" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        <svg class="moon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                        </svg>
+                    </button>
+
+                    <button class="cart-btn" id="cartBtn" aria-label="Shopping cart">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                        <span class="cart-count" id="cartCount">0</span>
+                    </button>
+
+                    <button class="btn btn-primary">Sign In</button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Find Your Perfect Pet Companion</h1>
+                <p>Discover loving, healthy pets from trusted breeders. Your new best friend is waiting for you!</p>
+                <div class="hero-actions">
+                    <button class="btn btn-white">
+                        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        Browse Pets
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Choose Beast Den?</h2>
+                <p>We provide the best experience for finding your perfect pet companion</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                    </div>
+                    <h3>Verified Breeders</h3>
+                    <p>All our breeders are thoroughly vetted and certified to ensure the highest standards.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </div>
+                    <h3>Health Guarantee</h3>
+                    <p>Every pet comes with complete health records and comprehensive health guarantee.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Our expert team is always available to answer your questions and provide guidance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pets Section -->
+    <section class="pets-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Available Pets</h2>
+                <p>Browse our selection of adorable, healthy pets looking for their forever homes</p>
+            </div>
+            <div class="filters">
+                <button class="filter-btn active">All Pets</button>
+                <button class="filter-btn">Dogs</button>
+                <button class="filter-btn">Cats</button>
+                <button class="filter-btn">Birds</button>
+            </div>
+            <div class="pets-grid">
+                <div class="pet-card">
+                    <div class="pet-image" style="background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2C10.35 2 9 3.35 9 5c0 1.39.95 2.55 2.23 2.89C11.08 8.48 11 9.23 11 10c0 2.76 2.24 5 5 5 .77 0 1.52-.18 2.19-.51.28.63.81 1.12 1.47 1.34.28.09.57.17.87.17 1.1 0 2-.9 2-2 0-.3-.08-.59-.17-.87-.22-.66-.71-1.19-1.34-1.47.33-.67.51-1.42.51-2.19 0-2.76-2.24-5-5-5-.77 0-1.52.08-2.11.23C14.55 3.95 13.39 3 12 3c-1.65 0-3 1.35-3 3s1.35 3 3 3c.77 0 1.47-.29 2-.77.53.48 1.23.77 2 .77.77 0 1.47-.29 2-.77.53.48 1.23.77 2 .77 1.65 0 3-1.35 3-3s-1.35-3-3-3c-.77 0-1.47.29-2 .77C14.47 3.29 13.77 3 13 3c-.77 0-1.47.29-2 .77C10.47 3.29 9.77 3 9 3c-1.1 0-2 .9-2 2s.9 2 2 2zM7 11c-1.65 0-3 1.35-3 3s1.35 3 3 3c.77 0 1.47-.29 2-.77.53.48 1.23.77 2 .77s1.47-.29 2-.77c.53.48 1.23.77 2 .77 1.65 0 3-1.35 3-3s-1.35-3-3-3c-.77 0-1.47.29-2 .77-.53-.48-1.23-.77-2-.77s-1.47.29-2 .77C8.47 11.29 7.77 11 7 11zm5 7c-1.65 0-3 1.35-3 3v1c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1c0-1.65-1.35-3-3-3z"/>
+                        </svg>
+                        <span class="pet-badge">Popular</span>
+                    </div>
+                    <div class="pet-info">
+                        <div class="pet-header">
+                            <div>
+                                <h3>Max</h3>
+                                <p class="pet-breed">Golden Retriever</p>
+                            </div>
+                            <div class="pet-price">$1,200</div>
+                        </div>
+                        <div class="pet-details">
+                            <div class="pet-detail">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>3 months</span>
+                            </div>
+                            <div class="pet-detail">
+                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                <span>New York</span>
+                            </div>
+                        </div>
+                        <div class="pet-actions">
+                            <button class="btn btn-outline">Save</button>
+                            <button class="btn btn-primary">Adopt Now</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- More pet cards... -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Beast Den</h3>
+                    <p>Your trusted partner in finding the perfect pet companion. We connect loving families with healthy, happy pets from verified breeders.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <a href="#">About Us</a>
+                    <a href="#">Browse Pets</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Beast Den. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Splash Screen with particles
+        window.addEventListener('load', () => {
+            const particlesContainer = document.querySelector('.splash-particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                particle.style.animationDelay = Math.random() * 2 + 's';
+                particlesContainer.appendChild(particle);
+            }
+
+            const splash = document.getElementById('splash-screen');
+            setTimeout(() => {
+                splash.style.opacity = '0';
+                setTimeout(() => splash.remove(), 1200);
+            }, 2500);
+        });
+
+        // Dark mode toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme === 'dark') document.body.classList.add('dark');
+
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        });
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
+
+        // Cart functionality
+        let cartCount = 0;
+        const cartCountEl = document.getElementById('cartCount');
+        
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            if (btn.textContent.includes('Adopt')) {
+                btn.addEventListener('click', () => {
+                    cartCount++;
+                    cartCountEl.textContent = cartCount;
+                    alert('Pet added to your favorites!');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
